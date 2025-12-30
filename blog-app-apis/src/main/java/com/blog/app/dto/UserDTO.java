@@ -1,5 +1,11 @@
 package com.blog.app.dto;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com.blog.app.entity.Role;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -19,12 +25,22 @@ public class UserDTO {
 	@Email(message = "Email addess is not valid !!")
 	private String email;
 
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@NotEmpty(message = "Password is required")
 	@Size(min = 8, message = "Password must be at least 8 characters long")
 	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$", message = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character")
 	private String password;
-	
+
 	private String about;
+	private Set<RoleDTO> roles = new HashSet<>();
+
+	public Set<RoleDTO> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<RoleDTO> roles) {
+		this.roles = roles;
+	}
 
 	public Long getId() {
 		return id;

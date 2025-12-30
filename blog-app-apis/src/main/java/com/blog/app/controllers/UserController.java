@@ -1,7 +1,11 @@
 package com.blog.app.controllers;
 
+import java.util.Collection;
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +39,7 @@ public class UserController {
 	public UserDTO updateUser(@Valid @RequestBody UserDTO userDto) {
 		return userService.updateUser(userDto);
 	}
-
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping
 	public List<UserDTO> getUsers() {
 		return userService.getAllUsers();
@@ -46,9 +50,15 @@ public class UserController {
 		return userService.getUserById(id);
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
 	public String deleteUser(@PathVariable Long id) {
 		userService.deleteUser(id);
 		return "User deleted successfully";
 	}
+	@GetMapping("/debug/roles")
+	public Collection<? extends GrantedAuthority> debugRoles(Authentication authentication) {
+	    return authentication.getAuthorities();
+	}
+
 }
